@@ -262,3 +262,228 @@ main,.footer,.nav{position:relative;z-index:2}
 .copy-id-btn:hover{background:rgba(255,255,255,0.1);border-color:var(--accent)}
 .copy-id-btn:active{transform:scale(.95)}
 .copy-id-btn.copied{background:rgba(46,230,166,0.12);border-color:#2ee6a6;color:#2ee6a6}
+
+/* ============ CYBERPUNK BGM PLAYER ============ */
+.bgm-widget {
+  position: fixed;
+  bottom: 22px;
+  left: 22px;
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px 8px 8px;
+  background: rgba(10, 14, 22, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: 40px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  transition: all 0.3s var(--ease);
+  user-select: none;
+}
+.bgm-widget:hover {
+  border-color: var(--accent);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.75), 0 0 24px -6px var(--accent);
+}
+.bgm-widget.collapsed .bgm-body,
+.bgm-widget.collapsed .bgm-actions {
+  display: none !important;
+}
+.bgm-widget.collapsed {
+  padding: 6px;
+  border-radius: 50%;
+}
+.bgm-play-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #2b82ff);
+  color: #06101a;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s var(--ease), box-shadow 0.25s;
+  position: relative;
+}
+.bgm-play-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 18px var(--accent);
+}
+.bgm-play-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  margin-left: 2px;
+  transition: transform 0.15s;
+}
+.bgm-widget.playing .bgm-play-btn svg {
+  margin-left: 0;
+}
+.bgm-widget.playing .bgm-play-btn {
+  box-shadow: 0 0 20px -2px var(--accent);
+  animation: bgm-pulse-ring 2.4s infinite;
+}
+@keyframes bgm-pulse-ring {
+  0% { box-shadow: 0 0 0 0 var(--accent); }
+  70% { box-shadow: 0 0 0 12px rgba(76, 195, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 195, 255, 0); }
+}
+
+.bgm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 140px;
+  max-width: 190px;
+}
+.bgm-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: var(--head);
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
+}
+.bgm-title {
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bgm-status {
+  font-size: 0.65rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bgm-viz {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 15px;
+  padding: 1px 0;
+}
+.bgm-bar {
+  width: 3.5px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  transition: height 0.08s linear, background-color 0.25s;
+}
+.bgm-widget.playing .bgm-bar {
+  background: linear-gradient(to top, var(--accent), var(--accent2));
+}
+
+.bgm-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 2px;
+}
+.bgm-icon-btn {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+.bgm-icon-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-1px);
+}
+.bgm-icon-btn:active {
+  transform: scale(0.92);
+}
+.bgm-icon-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.bgm-vol-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.bgm-vol-slider {
+  width: 0;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: width 0.22s var(--ease), opacity 0.22s, transform 0.22s;
+  accent-color: var(--accent);
+  height: 4px;
+  cursor: pointer;
+  margin-left: 4px;
+}
+.bgm-vol-wrap:hover .bgm-vol-slider,
+.bgm-vol-slider:focus {
+  width: 58px;
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.bgm-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 10px;
+  padding: 6px 12px;
+  background: rgba(10, 14, 22, 0.95);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--head);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  animation: bgm-bounce 1.5s infinite;
+}
+.bgm-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  border: 5px solid transparent;
+  border-top-color: var(--accent);
+}
+@keyframes bgm-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@media (max-width: 600px) {
+  .bgm-widget {
+    bottom: 16px;
+    left: 16px;
+    padding: 6px 10px 6px 6px;
+    gap: 8px;
+  }
+  .bgm-play-btn {
+    width: 38px;
+    height: 38px;
+  }
+  .bgm-body {
+    min-width: 105px;
+    max-width: 135px;
+  }
+  .bgm-vol-wrap:hover .bgm-vol-slider {
+    display: none;
+  }
+}
+
