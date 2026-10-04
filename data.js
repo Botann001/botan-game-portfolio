@@ -5,7 +5,7 @@ const GAMES = {
     copyId: { label: 'ID Mobile Legends', value: '237817687 (9261)' },
     title: 'Mobile Legends',
     meta: 'Nick <b>Nah i\'d win</b> • ID 237817687 (9261) • Squad <b>CYBER CHERUBIN</b> • Level 135',
-    art: 'img/ml-char.webp',
+    art: 'img/char-ml.png',
     badge: { img: 'img/icon-ml.webp', name: 'Nah i\'d win', sub: '9 tahun bersama • Indonesia' },
     stats: [
       { v: 11406, l: 'Pertandingan' },
