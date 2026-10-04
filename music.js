@@ -59,7 +59,7 @@
     const track = TRACKS[currentTrack];
 
     widget.innerHTML = `
-      ${!sessionStorage.getItem('botan_bgm_hint') ? '<div class="bgm-tooltip" id="bgmTooltip">Putar BGM 🎧</div>' : ''}
+      ${!localStorage.getItem('botan_bgm_hint') ? '<div class="bgm-tooltip" id="bgmTooltip">Putar BGM 🎧</div>' : ''}
       <button class="bgm-play-btn" id="bgmPlayBtn" aria-label="Play Music" title="Putar / Jeda BGM">
         <svg id="bgmPlayIcon" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>
       </button>
@@ -112,7 +112,7 @@
         playIcon.innerHTML = '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>';
         statusEl.textContent = `[${TRACKS[currentTrack].tag}]`;
         if (tooltip) tooltip.remove();
-        sessionStorage.setItem('botan_bgm_hint', '1');
+        localStorage.setItem('botan_bgm_hint', '1');
       } else {
         widget.classList.remove('playing');
         playIcon.innerHTML = '<polygon points="6 4 20 12 6 20 6 4"/>';
@@ -129,16 +129,16 @@
       if (audio.paused) {
         audio.play().then(() => {
           updateIcons(true);
-          sessionStorage.setItem('botan_bgm_playing', '1');
-          sessionStorage.removeItem('botan_bgm_user_paused');
+          localStorage.setItem('botan_bgm_playing', '1');
+          localStorage.removeItem('botan_bgm_user_paused');
         }).catch(() => {
           updateIcons(false);
         });
       } else {
         audio.pause();
         updateIcons(false);
-        sessionStorage.setItem('botan_bgm_playing', '0');
-        sessionStorage.setItem('botan_bgm_user_paused', '1');
+        localStorage.setItem('botan_bgm_playing', '0');
+        localStorage.setItem('botan_bgm_user_paused', '1');
       }
     }
 
@@ -153,7 +153,7 @@
       audio.volume = 0;
       audio.play().then(() => {
         updateIcons(true);
-        sessionStorage.setItem('botan_bgm_playing', '1');
+        localStorage.setItem('botan_bgm_playing', '1');
         // Smooth fade-in
         let cur = 0;
         const fadeTimer = setInterval(() => {
@@ -248,13 +248,13 @@
     renderViz();
 
     // ============ AUTO-PLAY ON FIRST USER CLICK / GESTURE ============
-    const userExplicitlyPaused = sessionStorage.getItem('botan_bgm_user_paused') === '1';
+    const userExplicitlyPaused = localStorage.getItem('botan_bgm_user_paused') === '1';
 
     // 1. Try immediate auto-play (if browser allows it)
     if (!userExplicitlyPaused) {
       audio.play().then(() => {
         updateIcons(true);
-        sessionStorage.setItem('botan_bgm_playing', '1');
+        localStorage.setItem('botan_bgm_playing', '1');
       }).catch(() => {
         // Autoplay blocked: wait for first click/tap anywhere on page
         updateIcons(false);
@@ -263,7 +263,7 @@
 
     // 2. Click anywhere on the webpage to start music (without removing or bypassing the player widget)
     const onAnyFirstInteraction = (e) => {
-      if (sessionStorage.getItem('botan_bgm_user_paused') === '1') return;
+      if (localStorage.getItem('botan_bgm_user_paused') === '1') return;
       if (e && e.target && e.target.closest && e.target.closest('#bgmWidget')) return; // handled by widget buttons
 
       tryStartMusicWithFadeIn();
