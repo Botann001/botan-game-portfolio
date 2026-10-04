@@ -75,7 +75,7 @@ const GAMES = {
     chips: ['Bronze 3', 'Level 22', 'Raze main', '8 menang dari 14 match'],
     gallery: [
       { src: 'img/valo-profile.webp', cap: 'Profil & rank' },
-      { src: 'img/valo-logo.svg', cap: 'Competitive overview' },
+      { src: 'img/valo-comp.webp', cap: 'Competitive overview' },
       { src: 'img/valo-agent.webp', cap: 'Agent: Raze' }
     ]
   }
