@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game • Botan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-game="ml" class="game-page">
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="scanlines" aria-hidden="true"></div>
+
+<header class="nav appbar">
+  <a href="index.html#games" class="back" aria-label="Kembali ke My Game"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <div class="appbar-title"><span class="app-icon mini"><img id="appIcon" src="" alt=""></span><b id="appName"></b></div>
+  <a href="index.html" class="logo"><span>B</span>OTAN</a>
+</header>
+
+<main class="section game-main">
+  <div id="panel" class="panel reveal"></div>
+
+  <div class="other reveal">
+    <p class="gallery-h">Game lainnya</p>
+    <div class="app-grid left" id="otherApps"></div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p><a href="index.html#games" class="btn">&lsaquo; Kembali ke My Game</a></p>
+  <p class="muted">Dibuat dengan HTML, CSS, dan JavaScript • © <span id="year"></span> Botan</p>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" aria-label="Tutup">&times;</button>
+  <img id="lbImg" alt="">
+  <p id="lbCap"></p>
+</div>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

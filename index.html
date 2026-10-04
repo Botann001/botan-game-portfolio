@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Botan • My Game Portfolio</title>
+  <meta name="description" content="Portofolio game Botan: Mobile Legends, Wuthering Waves, dan Valorant.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-game="ml">
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a href="#top" class="logo"><span>B</span>OTAN<i>//GAMER</i></a>
+    <nav>
+      <a href="#games">My Game</a>
+      <a href="#stats">Total Stats</a>
+      <a href="#aim">Mini Game</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow"><b class="pulse"></b> PLAYER ONLINE</p>
+        <h1 class="glitch" data-text="BOTAN">BOTAN</h1>
+        <p class="typing"><span id="typed"></span><i class="caret"></i></p>
+        <p class="lead">Mahasiswa Informatika yang main game di sela-sela skripsi. Ini rekam jejakku di tiga game: dari
+          ribuan match Mobile Legends sampai ratusan jam di Tanah Tanpa Nama.</p>
+        <div class="cta">
+          <a class="btn primary" href="#games">Lihat My Game</a>
+          <a class="btn" href="#aim">Coba Aim Trainer</a>
+        </div>
+      </div>
+
+      <div class="hero-cards" id="heroCards">
+        <button class="poster" data-go="ml" style="--c:#4cc3ff">
+          <img src="img/icon-ml.webp" alt="Mobile Legends">
+          <span class="poster-info"><small>MOBA</small><b>Mobile Legends</b></span>
+        </button>
+        <button class="poster" data-go="wuwa" style="--c:#7fe3ff">
+          <img src="img/wuwa_icon.png" alt="Wuthering Waves">
+          <span class="poster-info"><small>ACTION RPG</small><b>Wuthering Waves</b></span>
+        </button>
+        <button class="poster" data-go="valo" style="--c:#ff4655">
+          <img src="img/valo_icon.png" alt="Valorant">
+          <span class="poster-info"><small>TACTICAL FPS</small><b>Valorant</b></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>11.406 MATCH MLBB</span><span>997 JAM WUTHERING WAVES</span><span>UNION LEVEL 80</span><span>53,23% WIN
+          RATE</span><span>16 SAVAGE</span><span>RAZE MAIN</span><span>ACS 225</span>
+        <span>11.406 MATCH MLBB</span><span>997 JAM WUTHERING WAVES</span><span>UNION LEVEL 80</span><span>53,23% WIN
+          RATE</span><span>16 SAVAGE</span><span>RAZE MAIN</span><span>ACS 225</span>
+      </div>
+    </div>
+
+    <!-- GAMES -->
+    <section id="games" class="section">
+      <div class="section-head reveal">
+        <p class="eyebrow">// MENU</p>
+        <h2>My Game</h2>
+        <p class="sub">Ketuk ikon game untuk membuka halaman profil, statistik, dan screenshot-nya.</p>
+      </div>
+
+      <div class="homescreen reveal">
+        <div class="statusbar" aria-hidden="true"><span>06:51</span><span class="sb-right">◆ ▲ ▮▮▮</span></div>
+        <div class="app-grid" id="appGrid"></div>
+        <div class="dock" aria-hidden="true"><i></i></div>
+      </div>
+    </section>
+
+    <!-- TOTAL STATS -->
+    <section id="stats" class="section">
+      <div class="section-head reveal">
+        <p class="eyebrow">// RINGKASAN</p>
+        <h2>Total Stats</h2>
+      </div>
+      <div class="totals">
+        <div class="total reveal"><b data-count="3">0</b><span>Game dimainkan</span></div>
+        <div class="total reveal"><b data-count="997">0</b><span>Jam di Wuthering Waves</span></div>
+        <div class="total reveal"><b data-count="11406">0</b><span>Match Mobile Legends</span></div>
+        <div class="total reveal"><b data-count="9">0</b><span>Tahun bersama MLBB</span></div>
+      </div>
+
+      <div class="share reveal" id="share"></div>
+    </section>
+
+    <!-- AIM TRAINER -->
+    <section id="aim" class="section">
+      <div class="section-head reveal">
+        <p class="eyebrow">// MINI GAME</p>
+        <h2>Aim Trainer</h2>
+        <p class="sub">Klik target sebanyak mungkin dalam 30 detik. Skor terbaik tersimpan di browser kamu.</p>
+      </div>
+      <div class="aim reveal">
+        <div class="aim-hud">
+          <div><small>SKOR</small><b id="aimScore">0</b></div>
+          <div><small>WAKTU</small><b id="aimTime">30</b></div>
+          <div><small>AKURASI</small><b id="aimAcc">0%</b></div>
+          <div><small>TERBAIK</small><b id="aimBest">0</b></div>
+        </div>
+        <div class="aim-field" id="aimField">
+          <div class="aim-overlay" id="aimOverlay">
+            <h3 id="aimTitle">Siap?</h3>
+            <p id="aimMsg">Target muncul acak. Jangan sampai meleset.</p>
+            <button class="btn primary" id="aimStart">Mulai</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Dibuat dengan HTML, CSS, dan JavaScript • © <span id="year"></span> Botan</p>
+    <p class="muted">Screenshot milik masing-masing game: Mobile Legends (Moonton), Wuthering Waves (Kuro Games),
+      Valorant (Riot Games).</p>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close" aria-label="Tutup">&times;</button>
+    <img id="lbImg" alt="">
+    <p id="lbCap"></p>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
