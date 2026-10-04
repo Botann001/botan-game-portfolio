@@ -42,7 +42,7 @@
       dataArray = new Uint8Array(analyser.frequencyBinCount);
       isWebAudioReady = true;
     } catch (e) {
-      // Graceful fallback for cross-origin or restricted environments
+      // Graceful fallback for cross-origin or local restricted environments
       isWebAudioReady = false;
     }
   }
@@ -130,7 +130,7 @@
         audio.play().then(() => {
           updateIcons(true);
           sessionStorage.setItem('botan_bgm_playing', '1');
-          localStorage.setItem('botan_bgm_auto', '1');
+          sessionStorage.removeItem('botan_bgm_user_paused');
         }).catch(() => {
           updateIcons(false);
         });
@@ -138,8 +138,36 @@
         audio.pause();
         updateIcons(false);
         sessionStorage.setItem('botan_bgm_playing', '0');
-        localStorage.setItem('botan_bgm_auto', '0');
+        sessionStorage.setItem('botan_bgm_user_paused', '1');
       }
+    }
+
+    function tryStartMusicWithFadeIn() {
+      if (!audio.paused) return;
+      initWebAudio();
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const targetVol = savedVol || 0.6;
+      audio.volume = 0;
+      audio.play().then(() => {
+        updateIcons(true);
+        sessionStorage.setItem('botan_bgm_playing', '1');
+        // Smooth fade-in
+        let cur = 0;
+        const fadeTimer = setInterval(() => {
+          cur += 0.05;
+          if (cur >= targetVol) {
+            audio.volume = targetVol;
+            clearInterval(fadeTimer);
+          } else {
+            audio.volume = cur;
+          }
+        }, 60);
+      }).catch(() => {
+        updateIcons(false);
+      });
     }
 
     function changeTrack(step = 1) {
@@ -198,7 +226,6 @@
       if (!audio.paused) {
         if (isWebAudioReady && analyser && dataArray) {
           analyser.getByteFrequencyData(dataArray);
-          // Pick sample bins across frequency spectrum
           const binIndices = [2, 5, 9, 14, 20, 26];
           bars.forEach((bar, idx) => {
             const val = dataArray[binIndices[idx]] || 0;
@@ -220,25 +247,35 @@
     }
     renderViz();
 
-    // Auto-resume if already playing across page navigation
-    const shouldAutoResume = sessionStorage.getItem('botan_bgm_playing') === '1';
-    if (shouldAutoResume) {
+    // ============ AUTO-PLAY ON FIRST USER CLICK / GESTURE ============
+    const userExplicitlyPaused = sessionStorage.getItem('botan_bgm_user_paused') === '1';
+
+    // 1. Try immediate auto-play (if browser allows it)
+    if (!userExplicitlyPaused) {
       audio.play().then(() => {
         updateIcons(true);
+        sessionStorage.setItem('botan_bgm_playing', '1');
       }).catch(() => {
-        // Autoplay policy prevented immediate playback; wait for first user gesture
+        // Autoplay blocked: wait for first click/tap anywhere on page
         updateIcons(false);
-        const onFirstInteract = () => {
-          if (sessionStorage.getItem('botan_bgm_playing') === '1' && audio.paused) {
-            initWebAudio();
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            audio.play().then(() => updateIcons(true)).catch(() => {});
-          }
-          window.removeEventListener('pointerdown', onFirstInteract);
-          window.removeEventListener('keydown', onFirstInteract);
-        };
-        window.addEventListener('pointerdown', onFirstInteract, { once: true });
-        window.addEventListener('keydown', onFirstInteract, { once: true });
+      });
+    }
+
+    // 2. Click anywhere on the webpage to start music (without removing or bypassing the player widget)
+    const onAnyFirstInteraction = (e) => {
+      if (sessionStorage.getItem('botan_bgm_user_paused') === '1') return;
+      if (e && e.target && e.target.closest && e.target.closest('#bgmWidget')) return; // handled by widget buttons
+
+      tryStartMusicWithFadeIn();
+
+      ['pointerdown', 'touchstart', 'click', 'keydown'].forEach(evt => {
+        window.removeEventListener(evt, onAnyFirstInteraction);
+      });
+    };
+
+    if (!userExplicitlyPaused) {
+      ['pointerdown', 'touchstart', 'click', 'keydown'].forEach(evt => {
+        window.addEventListener(evt, onAnyFirstInteraction, { once: true, passive: true });
       });
     }
 
