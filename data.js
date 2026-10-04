@@ -2,6 +2,7 @@
 const GAMES = {
   ml: {
     tab: 'Mobile Legends', page: 'ml.html', icon: 'img/icon-ml.webp', color: '#4cc3ff', genre: 'MOBA',
+    copyId: { label: 'ID Mobile Legends', value: '237817687 (9261)' },
     title: 'Mobile Legends',
     meta: 'Nick <b>Nah i\'d win</b> • ID 237817687 (9261) • Squad <b>CYBER CHERUBIN</b> • Level 135',
     art: 'img/ml-char.webp',
@@ -32,6 +33,7 @@ const GAMES = {
   },
   wuwa: {
     tab: 'Wuthering Waves', page: 'wuwa.html', icon: 'img/wuwa_icon.png', color: '#7fe3ff', genre: 'ACTION RPG',
+    copyId: { label: 'UID Wuthering Waves', value: '901954339' },
     title: 'Wuthering Waves',
     meta: 'Nama <b>Kei Kuronuma</b> • UID 901954339 • Title <b>Legend Smasher</b> • Terakhir main 2 Okt',
     art: 'img/wuwa-char.webp',
@@ -52,6 +54,7 @@ const GAMES = {
   },
   valo: {
     tab: 'Valorant', page: 'valo.html', icon: 'img/valo_icon.png', color: '#ff4655', genre: 'TACTICAL FPS',
+    copyId: { label: 'Riot ID Valorant', value: 'DONTOL#SAWIT' },
     title: 'Valorant',
     meta: 'Riot ID <b>DONTOL#SAWIT</b> • Level 22 • Agent main <b>Raze</b> (Duelist)',
     art: 'img/valo-char.webp',

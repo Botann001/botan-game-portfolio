@@ -31,6 +31,7 @@ panel.innerHTML = `
   <div class="p-info">
     <div class="p-title"><h3>${g.title}</h3><span class="genre">${g.genre}</span></div>
     <p class="p-meta">${g.meta}</p>
+    ${g.copyId ? `<button class="copy-id-btn" id="copyIdBtn"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Salin ${g.copyId.label}</button>` : ''}
     <div class="stat-grid">${g.stats.map(statHTML).join('')}</div>
     <div class="viz">${viz}</div>
     <div class="chips">${g.chips.map(c => `<span class="chip">${c}</span>`).join('')}</div>
@@ -38,6 +39,19 @@ panel.innerHTML = `
     <div class="gallery">${g.gallery.map((p, i) => `<button class="thumb" data-i="${i}"><img src="${p.src}" alt="${p.cap}" loading="lazy"><span>${p.cap}</span></button>`).join('')}</div>
   </div>`;
 $$('.thumb', panel).forEach(t => t.onclick = () => openLB(g.gallery[+t.dataset.i]));
+
+/* tombol salin ID */
+if (g.copyId) {
+  const copyBtn = $('#copyIdBtn');
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(g.copyId.value).then(() => {
+      const orig = copyBtn.innerHTML;
+      copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!`;
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.innerHTML = orig; copyBtn.classList.remove('copied'); }, 2000);
+    });
+  });
+}
 
 /* game lain (ikon) */
 $('#otherApps').innerHTML = Object.entries(GAMES).filter(([k]) => k !== key).map(([k, o]) =>

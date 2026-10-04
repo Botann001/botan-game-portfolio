@@ -256,3 +256,9 @@ main,.footer,.nav{position:relative;z-index:2}
 .comment-item h4 { font-size: 1rem; color: var(--accent); margin-bottom: 6px; font-family: var(--head); display: flex; align-items: center; justify-content: space-between; }
 .comment-item h4 span { font-size: 0.75rem; color: var(--muted); font-weight: normal; font-family: var(--body); }
 .comment-item p { font-size: 0.95rem; line-height: 1.5; color: #cbd5e1; word-wrap: break-word; }
+
+/* ============ COPY ID BUTTON ============ */
+.copy-id-btn{display:inline-flex;align-items:center;gap:7px;margin:10px 0 14px;padding:8px 18px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--accent);font-family:var(--head);font-size:0.82rem;letter-spacing:.06em;cursor:pointer;transition:background .2s,border-color .2s,transform .15s;-webkit-tap-highlight-color:transparent}
+.copy-id-btn:hover{background:rgba(255,255,255,0.1);border-color:var(--accent)}
+.copy-id-btn:active{transform:scale(.95)}
+.copy-id-btn.copied{background:rgba(46,230,166,0.12);border-color:#2ee6a6;color:#2ee6a6}
