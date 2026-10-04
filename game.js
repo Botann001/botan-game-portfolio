@@ -61,7 +61,7 @@ document.querySelector('.game-main').insertBefore(commentSection, $('.other'));
 
 const form = $('#commentForm');
 const list = $('#commentsList');
-const SUPABASE_URL = 'https://rtqhwyyvloixlftecndev.supabase.co';
+const SUPABASE_URL = 'https://rtqhwyvloixlftecndev.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0cWh3eXZsb2l4bGZ0ZWNuZGV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwNjYyMzgsImV4cCI6MjEwNjY0MjIzOH0.ppp6t-4Poy0bHREmg5I11nKC1jNNG5CNi-0Jk8CNTDU';
 const API_URL = `${SUPABASE_URL}/rest/v1/comments`;
 
