@@ -1,7 +1,7 @@
 /* Halaman utama */
 /* ============ TYPING ============ */
 (function () {
-  const lines = ['Mobile Legends • 11.406 match', 'Wuthering Waves • 997 jam', 'Valorant • Raze main', 'Just For Fun'];
+  const lines = ['Mobile Legends • 11.406 match', 'Wuthering Waves • 997 jam', 'Valorant • Raze main', 'Roblox • @O_forYou', 'Just For Fun'];
   const el = $('#typed');
   if (reduced) { el.textContent = lines[0]; return; }
   let li = 0, ci = 0, del = false;

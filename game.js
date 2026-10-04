@@ -8,50 +8,111 @@ $('#appName').textContent = g.title;
 const statHTML = s =>
   `<div class="stat ${s.hl ? 'hl' : ''}"><b data-to="${s.v}" data-d="${s.d || 0}" data-s="${s.s || ''}">0</b><small>${s.l}</small></div>`;
 
-let viz = '';
-if (g.radar) viz += `<div class="viz-card"><h4>Radar performa</h4><canvas data-radar width="360" height="320"></canvas><p class="note">Nilai radar diperkirakan dari grafik di game.</p></div>`;
-if (g.bars) {
-  const pct = (g.bars.cur / g.bars.max * 100).toFixed(1);
-  viz += `<div class="viz-card"><h4>${g.bars.title}</h4><div class="bar"><i data-w="${pct}%"></i></div><div class="bar-row"><b>${fmt(g.bars.cur)}</b><span>/ ${fmt(g.bars.max)} (${fmt(+pct, 1)}%)</span></div></div>`;
-}
-if (g.donut) {
-  const C = 2 * Math.PI * 48, wp = g.donut.win / (g.donut.win + g.donut.lose);
-  viz += `<div class="viz-card"><h4>Menang / Kalah</h4><div class="donut">
-    <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="48" stroke="#ff4655" opacity=".55"/>
-    <circle class="arc" cx="60" cy="60" r="48" stroke="#2ee6a6" stroke-dasharray="0 ${C}" data-arc="${(C * wp).toFixed(1)} ${C.toFixed(1)}" style="transition:stroke-dasharray 1.4s cubic-bezier(.2,.8,.2,1)"/></svg>
-    <div class="legend"><b>${g.donut.win}W • ${g.donut.lose}L</b><span>Win ${fmt(g.donut.pct, 1)}%</span></div></div></div>`;
-}
-
 const panel = $('#panel');
-panel.innerHTML = `
-  <div class="p-art">
-    <img class="main" src="${g.art}" alt="${g.title}">
-    <div class="badge"><img src="${g.badge.img}" alt=""><div><b>${g.badge.name}</b><small>${g.badge.sub}</small></div></div>
-  </div>
-  <div class="p-info">
-    <div class="p-title"><h3>${g.title}</h3><span class="genre">${g.genre}</span></div>
-    <p class="p-meta">${g.meta}</p>
-    ${g.copyId ? `<button class="copy-id-btn" id="copyIdBtn"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Salin ${g.copyId.label}</button>` : ''}
-    <div class="stat-grid">${g.stats.map(statHTML).join('')}</div>
-    <div class="viz">${viz}</div>
-    <div class="chips">${g.chips.map(c => `<span class="chip">${c}</span>`).join('')}</div>
-    <p class="gallery-h">Screenshot</p>
-    <div class="gallery">${g.gallery.map((p, i) => `<button class="thumb" data-i="${i}"><img src="${p.src}" alt="${p.cap}" loading="lazy"><span>${p.cap}</span></button>`).join('')}</div>
-  </div>`;
-$$('.thumb', panel).forEach(t => t.onclick = () => openLB(g.gallery[+t.dataset.i]));
+const accounts = g.accounts || [g];
+let activeAccountIdx = 0;
 
-/* tombol salin ID */
-if (g.copyId) {
-  const copyBtn = $('#copyIdBtn');
-  copyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText(g.copyId.value).then(() => {
-      const orig = copyBtn.innerHTML;
-      copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!`;
-      copyBtn.classList.add('copied');
-      setTimeout(() => { copyBtn.innerHTML = orig; copyBtn.classList.remove('copied'); }, 2000);
+function renderAccount(idx, animate = false) {
+  activeAccountIdx = idx;
+  const acc = accounts[idx];
+
+  if (animate) {
+    panel.classList.remove('swap');
+    void panel.offsetWidth;
+    panel.classList.add('swap');
+  }
+
+  let viz = '';
+  if (acc.radar) viz += `<div class="viz-card"><h4>Radar performa</h4><canvas id="radarCanvas" width="360" height="320"></canvas><p class="note">Nilai radar diperkirakan dari statistik game.</p></div>`;
+  if (acc.bars) {
+    const pct = (acc.bars.cur / acc.bars.max * 100).toFixed(1);
+    viz += `<div class="viz-card"><h4>${acc.bars.title}</h4><div class="bar"><i data-w="${pct}%"></i></div><div class="bar-row"><b>${fmt(acc.bars.cur)}</b><span>/ ${fmt(acc.bars.max)} (${fmt(+pct, 1)}%)</span></div></div>`;
+  }
+  if (acc.donut) {
+    const C = 2 * Math.PI * 48, wp = acc.donut.win / (acc.donut.win + acc.donut.lose);
+    viz += `<div class="viz-card"><h4>Menang / Kalah</h4><div class="donut">
+      <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="48" stroke="#ff4655" opacity=".55"/>
+      <circle class="arc" cx="60" cy="60" r="48" stroke="#2ee6a6" stroke-dasharray="0 ${C}" data-arc="${(C * wp).toFixed(1)} ${C.toFixed(1)}" style="transition:stroke-dasharray 1.4s cubic-bezier(.2,.8,.2,1)"/></svg>
+      <div class="legend"><b>${acc.donut.win}W • ${acc.donut.lose}L</b><span>Win ${fmt(acc.donut.pct, 1)}%</span></div></div></div>`;
+  }
+
+  panel.innerHTML = `
+    <div class="p-art">
+      <img class="main" src="${acc.art}" alt="${acc.title}">
+      <div class="badge"><img src="${acc.badge.img}" alt=""><div><b>${acc.badge.name}</b><small>${acc.badge.sub}</small></div></div>
+    </div>
+    <div class="p-info">
+      <div class="p-title"><h3>${acc.title}</h3><span class="genre">${g.genre}</span></div>
+      <p class="p-meta">${acc.meta}</p>
+      ${acc.copyId ? `<button class="copy-id-btn" id="copyIdBtn"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Salin ${acc.copyId.label}</button>` : ''}
+      <div class="stat-grid">${acc.stats.map(statHTML).join('')}</div>
+      <div class="viz">${viz}</div>
+      <div class="chips">${acc.chips.map(c => `<span class="chip">${c}</span>`).join('')}</div>
+      <p class="gallery-h">Screenshot</p>
+      <div class="gallery">${acc.gallery.map((p, i) => `<button class="thumb" data-i="${i}"><img src="${p.src}" alt="${p.cap}" loading="lazy"><span>${p.cap}</span></button>`).join('')}</div>
+    </div>`;
+
+  // Countup stats numbers
+  $$('[data-to]', panel).forEach(countUp);
+
+  // Bars width
+  $$('.bar i[data-w]', panel).forEach(b => b.style.width = b.dataset.w);
+
+  // Bind thumbnails to Lightbox
+  $$('.thumb', panel).forEach(t => t.onclick = () => openLB(acc.gallery[+t.dataset.i]));
+
+  // Bind copy ID button
+  if (acc.copyId) {
+    const copyBtn = $('#copyIdBtn', panel);
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(acc.copyId.value).then(() => {
+          const orig = copyBtn.innerHTML;
+          copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!`;
+          copyBtn.classList.add('copied');
+          setTimeout(() => { copyBtn.innerHTML = orig; copyBtn.classList.remove('copied'); }, 2000);
+        });
+      });
+    }
+  }
+
+  // Draw radar if present
+  if (acc.radar) {
+    const cv = $('#radarCanvas', panel);
+    if (cv) drawRadar(cv, acc.radar);
+  }
+
+  // Update switcher pills active class
+  $$('.acc-pill').forEach((pill, pIdx) => {
+    pill.classList.toggle('active', pIdx === idx);
+  });
+}
+
+// Render account switcher if multiple accounts exist
+if (accounts.length > 1) {
+  const switcher = document.createElement('div');
+  switcher.className = 'account-switcher reveal in';
+  switcher.innerHTML = accounts.map((acc, i) =>
+    `<button class="acc-pill ${i === 0 ? 'active' : ''}" data-idx="${i}">
+      <span>${acc.icon || '🎮'}</span>
+      <span>${acc.name}</span>
+      ${acc.tag ? `<span class="acc-tag">${acc.tag}</span>` : ''}
+    </button>`
+  ).join('');
+
+  panel.parentNode.insertBefore(switcher, panel);
+
+  $$('.acc-pill', switcher).forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = +btn.dataset.idx;
+      if (idx !== activeAccountIdx) {
+        renderAccount(idx, true);
+      }
     });
   });
 }
+
+renderAccount(0, false);
 
 /* game lain (ikon) */
 $('#otherApps').innerHTML = Object.entries(GAMES).filter(([k]) => k !== key).map(([k, o]) =>

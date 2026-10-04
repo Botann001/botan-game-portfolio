@@ -68,8 +68,10 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 const observe = () => $$('.reveal:not(.in), .total b[data-to]').forEach(el => io.observe(el));
 
 /* ============ RADAR ============ */
-function drawRadar(cv) {
-  const g = GAMES.ml.radar, x = cv.getContext('2d'), W = cv.width, H = cv.height, cx = W / 2, cy = H / 2 + 6, R = 108;
+function drawRadar(cv, customRadar) {
+  const g = customRadar || cv._radarData || (GAMES.ml && (GAMES.ml.radar || (GAMES.ml.accounts && GAMES.ml.accounts[0].radar)));
+  if (!g) return;
+  const x = cv.getContext('2d'), W = cv.width, H = cv.height, cx = W / 2, cy = H / 2 + 6, R = 108;
   const acc = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#4cc3ff';
   const n = g.labels.length, ang = i => -Math.PI / 2 + i * 2 * Math.PI / n;
   const t0 = performance.now();
