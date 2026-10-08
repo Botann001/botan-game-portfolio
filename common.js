@@ -92,9 +92,30 @@ function drawRadar(cv, customRadar) {
 
 /* ============ LIGHTBOX ============ */
 const lb = $('#lightbox');
-function openLB(p) { $('#lbImg').src = p.src; $('#lbImg').alt = p.cap; $('#lbCap').textContent = p.cap; lb.hidden = false; }
-lb.onclick = e => { if (e.target !== $('#lbImg')) lb.hidden = true; };
-addEventListener('keydown', e => { if (e.key === 'Escape') lb.hidden = true; });
+function openLB(p) {
+  $('#lbImg').src = p.src;
+  $('#lbImg').alt = p.cap;
+  $('#lbCap').textContent = p.cap;
+  lb.hidden = false;
+  try { history.pushState({ modal: 'lightbox' }, '', window.location.href); } catch (e) {}
+}
+function closeLB() {
+  if (!lb.hidden) {
+    lb.hidden = true;
+    try {
+      if (history.state && history.state.modal === 'lightbox') {
+        history.back();
+      }
+    } catch (e) {}
+  }
+}
+lb.onclick = e => { if (e.target !== $('#lbImg')) closeLB(); };
+addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+addEventListener('popstate', () => {
+  if (!lb.hidden) {
+    lb.hidden = true;
+  }
+});
 
 
 /* ============ TRANSISI BUKA APLIKASI (gaya Android) ============ */
